@@ -1,10 +1,19 @@
 """
 Name: Ifaz Alam
 Date: May 8th, 2019
-Description: Tic-Tac-Toe
+Description: ICS Game Production, Tic-Tac-Toe!
 """
 #Modules
-import random, sys
+import random
+
+#Counter variable for occupied coordinates
+takenCoordinates = 0
+
+computer = False
+#Counter variable for score
+playerOneScore = 0
+playerTwoScore = 0
+computerScore = 0
 
 #List for grid coordinates
 coordinate = [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
@@ -23,88 +32,54 @@ def grid(coordinate):
     print('   ' + coordinate[7] + '   |   ' + coordinate[8] + '   |   ' + coordinate[9])
     print('   ' + '    |  ' + '     |  ')
 
+#Initial screen when the program starts
+def welcome():
+  
+  print("""
+  ████████╗██╗ ██████╗    ████████╗ █████╗  ██████╗    ████████╗ ██████╗ ███████╗
+  ╚══██╔══╝██║██╔════╝    ╚══██╔══╝██╔══██╗██╔════╝    ╚══██╔══╝██╔═══██╗██╔════╝
+    ██║   ██║██║            ██║   ███████║██║            ██║   ██║   ██║█████╗  
+    ██║   ██║██║            ██║   ██╔══██║██║            ██║   ██║   ██║██╔══╝  
+    ██║   ██║╚██████╗       ██║   ██║  ██║╚██████╗       ██║   ╚██████╔╝███████╗
+    ╚═╝   ╚═╝ ╚═════╝       ╚═╝   ╚═╝  ╚═╝ ╚═════╝       ╚═╝    ╚═════╝ ╚══════╝
+    """)
     
-#Function for placing a mark on the grid
-def placeMark(position, mark):
-    coordinate[position] = mark
-
-"""
-def tieCHECK():
-"""
-count = 0
-def playerOneMove():
-  global count
-  if (Winner(coordinate,'O')):
-    print("Player 2 wins")
-
-  elif (count == 9):
-    if not Winner(coordinate, 'X') or not Winner(coordinate,'O'):
-      print("its a tie")
-      sys.exit()
-    
-  elif (" " in coordinate):
-    position = int(input("\nPlayer 1, choose a position from 1-9: "))
-    if (1 <= position <= 9 and coordinate[position] == " "):
-      placeMark(position, 'X')
-      grid(coordinate)
-      count += 1
-      print(count)
-      playerTwoMove()
-    elif count == 9:
-      if not Winner(coordinate, 'X') or not Winner(coordinate,'O'):
-        choice = input("It's a tie! Would you like to play again?(Y/N)")
-        if choice == "Y":
-          Welcome()
-        elif choice == "N":
-          print("""
-          
-          """)
-          print("Thank you for playing!")
-    else:
-      print("Square Taken")
-      playerOneMove()
+  welcome = int(input("Welcome to Tic-Tac-Toe!\n1) Play\n2) Instructions\n3) Leave Game\n>> "))
+  if (welcome == 1):
+    modeSelection()
 
 
-      
-def playerTwoMove():
-  global count
-  if (Winner(coordinate,'X')):
-    print("Player 1 wins ")
-  elif (count == 9):
-    if not Winner(coordinate, 'X') or not Winner(coordinate,'O'):
-      choice = input("Would you like to play again?(Y/N) ")
-      if choice == "Y":
-        Welcome()
-      elif choice == "N":
-        print("Thank you for playing!")
-  elif (" " in coordinate):  
-    position = int(input("\nPlayer 2, choose a position from 1-9: "))
-    if (1 <= position <= 9 and coordinate[position] == " " and count < 9):
-        placeMark(position, 'O')
-        grid(coordinate)
-        count += 1
-        print(count)
-        playerOneMove()
-    else:
-      print("Square Taken")    
-      playerTwoMove()   
-    
-#Function for Player versus Player gamemode
-def player_vs_player():
-    first = random.randint(1,10)
-    
-    if (1 <= first <= 5):
-        print("\nPlayer 1 goes first!\n")
-        grid(coordinate)
-        playerOneMove()
+  elif (welcome == 2):
+    print("""
+  Tic-Tac-Toe is a game where players take turns placing either an X, or an O on a
+  3x3 grid. The objective is to successfully place three of your marks in a
+  vertical, horizontal, or diagonal direction to win. If all the coordinates are
+  occupied and there is no winner, it is a tie.
+
+  Note: In Tic-Tac-Toe, X always goes first.
+
+      """)
+    begin = input("When you are ready to begin, type 'start'\n>> ")
+    if (begin == 'start'):
+      modeSelection()
+
+#Function for gamemode selection           
+def modeSelection():
+  gamemode = int(input("\nHow would you like to play?\n1) Player versus Computer\n2) Player versus Player\n>> "))
+  #Player versus Computer
+  if (gamemode == 1):
+    player_vs_computer()
+
+  #Player versus Player
+  elif (gamemode == 2):
+    player_vs_player()
         
-    else:
-        print("\nPlayer 2 goes first!\n")
-        grid(coordinate)
-        playerTwoMove()
+  else:
+    print("Invalid entry, please try again!")
+    modeSelection()
 
 #Function for checking if a mark appears three times in a row in a certain direction
-def Winner(coordinate,mark):
+def winner(coordinate,mark):
     #Diagonally, top-left to bottom-right
     return ((coordinate[1] == mark and coordinate[5] == mark and coordinate[9] == mark) or
 
@@ -129,55 +104,135 @@ def Winner(coordinate,mark):
     #Vertically, right column
     (coordinate[3] == mark and coordinate[6] == mark and coordinate[9] == mark))
 
+#Function for placing a mark on the grid
+def placeMark(position, mark):
+  coordinate[position] = mark
 
+def player_vs_computer():
+  global takenCoordinates, playerOneScore, computerScore, computer
+	#resets count for occupied coordinates
+  takenCoordinates = 0
 
+  computer = True
 
-#Function for gamemode selection           
-def modeSelection():
-  #try:
-  gamemode = int(input("\nHow would you like to play?\n1) Player versus Computer\n2) Player versus Player\n>> "))
-    #Player versus Computer
-  if (gamemode == 1):
-    grid()
-    #Player versus Player
-  elif (gamemode == 2):
-    player_vs_player()
-        
+	#clears the board, useful for when the user chooses to play again
+  for x in range (0, len(coordinate)):
+    coordinate[x] = " "
+
+	#determines which player goes first
+  first = random.randint(1,2)
+  if (first == 1):
+    print("\nPlayer 1 goes first!\n")
+    grid(coordinate)
+    playerOneMove()
   else:
-    print("Invalid entry, please try again!")
-    modeSelection()
-  #Asks
-  """
-  except:
-    print("\nPlease enter a number\n")
-    modeSelection()
-"""
-def Welcome():
+    print("\nComputer goes first!\n")
+    grid(coordinate)
+    computerMove()
+
+#Function for Player versus Player gamemode
+def player_vs_player():
+  global takenCoordinates, playerOneScore, playerTwoScore
+	#resets count for occupied coordinates
+  takenCoordinates = 0  
+
+
+  #clears the board, useful for when the user chooses to play again
+  for x in range (0, len(coordinate)):
+    coordinate[x] = " "
+        
+  #determines which player goes first
+  first = random.randint(1,2)
+  if (first == 1):
+    print("\nPlayer 1 goes first!\n")
+    grid(coordinate)
+    playerOneMove()
+  else:
+    print("\nPlayer 2 goes first!\n")
+    grid(coordinate)
+    playerTwoMove()
+
+#Function that lets player one move
+def playerOneMove():
+  global takenCoordinates, playerOneScore, playerTwoScore, computer
+
+  #when player two wins, ask if the user would like to play again
+  if (winner(coordinate,'O')):
+    playerTwoScore += 1
+    print("Player 2 wins!\nThe score is %d - %d\n" % (playerOneScore, playerTwoScore))
+    choice = input("Would you like to play again? (Y/N)\n>> ")
+
+    if (choice == "Y"):
+        player_vs_player()
+    elif (choice == "N"):
+      print("\nOk, see you next time! •ᴗ•\n\nMATCH SUMMARY: %d - %d" % (playerOneScore, playerTwoScore))
+
+  #when the match is tied, ask if the user would like to play again
+  elif (takenCoordinates == 9):
+    if not winner(coordinate, 'X') or not winner(coordinate,'O'):
+      choice = input("It's a tie!\n Would you like to play again? (Y/N)\n>> ")
+      if choice == "Y":
+        player_vs_player()
+      elif choice == "N":
+        print("\nOk, see you next time! •ᴗ•\n\nMATCH SUMMARY: %d - %d" % (playerOneScore, playerTwoScore))
   
-  print("""
-  ████████╗██╗ ██████╗    ████████╗ █████╗  ██████╗    ████████╗ ██████╗ ███████╗
-  ╚══██╔══╝██║██╔════╝    ╚══██╔══╝██╔══██╗██╔════╝    ╚══██╔══╝██╔═══██╗██╔════╝
-    ██║   ██║██║            ██║   ███████║██║            ██║   ██║   ██║█████╗  
-    ██║   ██║██║            ██║   ██╔══██║██║            ██║   ██║   ██║██╔══╝  
-    ██║   ██║╚██████╗       ██║   ██║  ██║╚██████╗       ██║   ╚██████╔╝███████╗
-    ╚═╝   ╚═╝ ╚═════╝       ╚═╝   ╚═╝  ╚═╝ ╚═════╝       ╚═╝    ╚═════╝ ╚══════╝
-    """)
+  #allow player one to move if there is an available coordinate for their turn
+  elif (" " in coordinate):
+    position = int(input("\nPlayer 1, choose a position from 1-9: "))
+    if (1 <= position <= 9 and coordinate[position] == " "):
+      placeMark(position, 'X')
+      grid(coordinate)
+      takenCoordinates += 1
+      if (computer == True):
+        computerMove()
+      elif (computer == False):
+        playerTwoMove()
     
-  welcome = int(input("Welcome to Tic-Tac-Toe!\n1) Play\n2) Instructions\n3) Leave Game\n>> "))
-  if (welcome == 1):
-    modeSelection()
+    #asks player one to select a different coordinate
+    else:
+      print("The square you have selected is not available!")
+      playerOneMove()
+      
+def playerTwoMove():
+  global takenCoordinates, playerOneScore, playerTwoScore
 
+  #when player one  wins, ask if the user would like to play again
+  if (winner(coordinate,'X')):
+    playerOneScore += 1
+    print("Player 1 wins!\nThe score is %d - %d\n" % (playerOneScore, playerTwoScore))
+    choice = input("Would you like to play again? (Y/N)\n>> ")
+    if (choice == "Y"):
+        player_vs_player()
+    elif (choice == "N"):
+      print("\nOk, see you next time! •ᴗ•\n\nMATCH SUMMARY: %d - %d" % (playerOneScore, playerTwoScore))
 
-  elif (welcome == 2):
-    print("""
-  Tic-Tac-Toe is a game where players take turns placing either an X, or an O on a
-  3x3 grid. The objective is to successfully place three of your marks in a
-  vertical, horizontal, or diagonal direction to win. If all the coordinates are
-  occupied and there is no winner, it is a tie.
-  Note: In Tic-Tac-Toe, X always goes first.
-      """)
-    begin = input("When you are ready to begin, type 'start'\n>> ")
-    if (begin == 'start'):
-      modeSelection()
+  #when the match is tied, ask if the user would like to play again
+  elif (takenCoordinates == 9):
+    if not winner(coordinate, 'X') or not winner(coordinate,'O'):
+      choice = input("Would you like to play again?(Y/N) ")
+      if choice == "Y":
+        player_vs_player()
+      elif choice == "N":
+        print("\nOk, see you next time! •ᴗ•\n\nMATCH SUMMARY: %d - %d" % (playerOneScore, playerTwoScore))
+  
+  #allow player two to move if there is an available coordinate for their turn
+  elif (" " in coordinate):  
+    position = int(input("\nPlayer 2, choose a position from 1-9: "))
+    if (1 <= position <= 9 and coordinate[position] == " " and takenCoordinates < 9):
+        placeMark(position, 'O')
+        grid(coordinate)
+        takenCoordinates += 1
+        playerOneMove()
+        
+    #asks player one to select a different coordinate
+    else:
+      print("The square you have selected is not available!")    
+      playerTwoMove()   
     
-Welcome()
+def computerMove():
+  placeMark(random.randint(1,9), 'O')
+  playerOneMove()
+
+ 
+welcome()
+
